@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-k8s-demo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: node-k8s-demo
+  template:
+    metadata:
+      labels:
+        app: node-k8s-demo
+    spec:
+      containers:
+        - name: node-k8s-demo
+          image: localhost:5000/node-k8s-demo:latest
+          ports:
+            - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-k8s-demo-service
+spec:
+  selector:
+    app: node-k8s-demo
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: LoadBalancer
