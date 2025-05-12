@@ -1,3 +1,17 @@
+import jenkins.model.*
+import hudson.model.*
+import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition
+import org.jenkinsci.plugins.workflow.job.WorkflowJob
+
+// Get Jenkins instance
+def jenkins = Jenkins.getInstanceOrNull()
+
+// Create a Pipeline job
+def jobName = "Node-CICD-Pipeline"
+def job = jenkins.createProject(WorkflowJob, jobName)
+
+// Define the Pipeline script
+def pipelineScript = """
 pipeline {
     agent any
     stages {
@@ -47,3 +61,12 @@ pipeline {
         }
     }
 }
+"""
+
+// Set the Pipeline definition
+job.setDefinition(new CpsFlowDefinition(pipelineScript, true)) // true for sandbox mode
+
+// Save the job
+job.save()
+
+println "Created Pipeline job: ${jobName}"
