@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+      <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">
+        Login to Your Account
+      </h1>
+
+      <form id="loginForm" class="space-y-4">
+        <div>
+          <label for="username" class="block text-sm font-medium text-gray-700"
+            >Username</label
+          >
+          <input
+            type="text"
+            id="username"
+            name="username"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            required
+          />
+          <p id="usernameError" class="mt-1 text-sm text-red-600 hidden">
+            Username is required
+          </p>
+        </div>
+
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700"
+            >Password</label
+          >
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            required
+          />
+          <p id="passwordError" class="mt-1 text-sm text-red-600 hidden">
+            Password is required
+          </p>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <input
+              id="remember"
+              name="remember"
+              type="checkbox"
+              class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+            />
+            <label for="remember" class="ml-2 block text-sm text-gray-700"
+              >Remember me</label
+            >
+          </div>
+
+          <div class="text-sm">
+            <a
+              href="#"
+              class="font-medium text-indigo-600 hover:text-indigo-500"
+              >Forgot password?</a
+            >
+          </div>
+        </div>
+
+        <div>
+          <button
+            type="submit"
+            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Sign in
+          </button>
+        </div>
+      </form>
+
+      <div id="formError" class="mt-4 hidden">
+        <div class="bg-red-50 border-l-4 border-red-500 p-4">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg
+                class="h-5 w-5 text-red-500"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p id="errorMessage" class="text-sm text-red-700"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const loginForm = document.getElementById("loginForm");
+        const usernameInput = document.getElementById("username");
+        const passwordInput = document.getElementById("password");
+        const usernameError = document.getElementById("usernameError");
+        const passwordError = document.getElementById("passwordError");
+        const formError = document.getElementById("formError");
+        const errorMessage = document.getElementById("errorMessage");
+
+        // Simple mock authentication function
+        function authenticate(username, password) {
+          const validUsers = {
+            admin: "admin123",
+            user: "password123",
+          };
+
+          if (!validUsers[username]) {
+            return { success: false, message: "Invalid username" };
+          }
+
+          if (validUsers[username] !== password) {
+            return { success: false, message: "Invalid password" };
+          }
+
+          return { success: true, message: "Login successful" };
+        }
+
+        // Form submission handler
+        loginForm.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          // Reset error states
+          usernameError.classList.add("hidden");
+          passwordError.classList.add("hidden");
+          formError.classList.add("hidden");
+
+          // Get form values
+          const username = usernameInput.value.trim();
+          const password = passwordInput.value.trim();
+          let isValid = true;
+
+          // Validate username
+          if (!username) {
+            usernameError.classList.remove("hidden");
+            isValid = false;
+          }
+
+          // Validate password
+          if (!password) {
+            passwordError.classList.remove("hidden");
+            isValid = false;
+          }
+
+          if (!isValid) return;
+
+          // Mock authentication with slight delay for Selenium
+          setTimeout(() => {
+            const authResult = authenticate(username, password);
+
+            if (authResult.success) {
+              alert("Login successful");
+            } else {
+              errorMessage.textContent = authResult.message;
+              formError.classList.remove("hidden");
+            }
+          }, 500);
+        });
+
+        // Input validation on blur
+        usernameInput.addEventListener("blur", function () {
+          if (!usernameInput.value.trim()) {
+            usernameError.classList.remove("hidden");
+          }
+        });
+
+        passwordInput.addEventListener("blur", function () {
+          if (!passwordInput.value.trim()) {
+            passwordError.classList.remove("hidden");
+          }
+        });
+
+        // Clear errors when typing
+        usernameInput.addEventListener("input", function () {
+          if (usernameInput.value.trim()) {
+            usernameError.classList.add("hidden");
+          }
+        });
+
+        passwordInput.addEventListener("input", function () {
+          if (passwordInput.value.trim()) {
+            passwordError.classList.add("hidden");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
