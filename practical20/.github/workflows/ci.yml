@@ -1,0 +1,24 @@
+name: CI Pipeline - Save Build Logs
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run build and save log as text file
+        run: |
+          mkdir -p build
+          bash scripts/build.sh | tee build/build-log.txt
+
+      - name: Upload log file as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build/build-log.txt
