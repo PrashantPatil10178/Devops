@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: node-k8s-demo
-          image: prashant178/k8-image
+          image: prashant178/linux-k8-image:latest
           ports:
             - containerPort: 3000
 ---
