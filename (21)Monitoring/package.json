@@ -1,0 +1,21 @@
+{
+  "name": "(21)monitoring",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm:whitebox\" \"npm:blackbox\"",
+    "whitebox": "node whiteBox.js",
+    "blackbox": "node blackBox.js",
+    "install-deps": "npm install express prom-client axios concurrently"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.9.0",
+    "concurrently": "^9.1.2",
+    "express": "^5.1.0",
+    "prom-client": "^15.1.3"
+  }
+}
