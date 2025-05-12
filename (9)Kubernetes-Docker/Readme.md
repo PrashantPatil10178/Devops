@@ -99,8 +99,8 @@ minikube addons enable registry
 Tag and push the Docker image to the Minikube registry:
 
 ```bash
-docker tag node-k8s-demo:latest localhost:5000/node-k8s-demo:latest
-docker push localhost:5000/node-k8s-demo:latest
+& minikube -p minikube docker-env | Invoke-Expression
+docker build -t node-k8s-demo:latest .
 ```
 
 ## Step 6: Deploy to Kubernetes
