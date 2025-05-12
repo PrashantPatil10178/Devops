@@ -10,8 +10,13 @@ app.get("/health", (req, res) => {
   res.status(200).json({ status: "healthy" });
 });
 
-const server = app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+// Only start server if not in test environment
+if (process.env.NODE_ENV !== "test") {
+  const server = app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+  });
 
-module.exports = server;
+  module.exports = { app, server };
+} else {
+  module.exports = { app };
+}

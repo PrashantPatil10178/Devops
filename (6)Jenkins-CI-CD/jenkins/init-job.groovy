@@ -8,18 +8,27 @@ def jenkins = Jenkins.getInstanceOrNull()
 
 // Create a Pipeline job
 def jobName = "Node-CICD-Pipeline"
+def existingJob = jenkins.getItem(jobName)
+
+if (existingJob) {
+    jenkins.remove(existingJob)
+}
+
 def job = jenkins.createProject(WorkflowJob, jobName)
 
 // Define the Pipeline script
 def pipelineScript = """
 pipeline {
     agent any
+    
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/omjadhav17-o/jenkins-cd-ci.git'
+                git branch: 'main', 
+                url: 'https://github.com/PrashantPatil10178/CI-CD.git'
             }
         }
+        
         stage('Build') {
             steps {
                 dir('app') {
@@ -27,37 +36,30 @@ pipeline {
                 }
             }
         }
+        
         stage('Test') {
             steps {
                 dir('app') {
-                    sh 'npm test'
+                    script {
+                        // Kill any existing node processes using port 3000
+                        sh 'pkill -f "node.*3000" || true'
+                        sh 'npm test'
+                    }
                 }
-            }
-        }
-        stage('Build Docker Image') {
-            steps {
-                dir('app') {
-                    sh 'docker build -t node-cicd-demo:latest .'
-                }
-            }
-        }
-        stage('Deploy') {
-            steps {
-                sh 'docker stop node-cicd-demo || true'
-                sh 'docker rm node-cicd-demo || true'
-                sh 'docker run -d --name node-cicd-demo -p 3000:3000 node-cicd-demo:latest'
             }
         }
     }
+    
     post {
         always {
-            cleanWs()
+            // Cleanup any test servers
+            sh 'pkill -f "node.*3000" || true'
         }
         success {
             echo 'Pipeline completed successfully!'
         }
         failure {
-            echo 'Pipeline failed!'
+            echo 'Pipeline failed! Check logs for errors.'
         }
     }
 }
@@ -69,4 +71,4 @@ job.setDefinition(new CpsFlowDefinition(pipelineScript, true)) // true for sandb
 // Save the job
 job.save()
 
-println "Created Pipeline job: ${jobName}"
+println "Successfully created/updated Pipeline job: ${jobName}"
