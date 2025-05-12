@@ -26,6 +26,16 @@ docker run -d --name jenkins \
   jenkins/jenkins:lts
 ```
 
+for Powershell
+
+```bash
+docker run -d --name jenkins `
+  -p 8080:8080 -p 50000:50000 `
+  -v ${PWD}\jenkins_home:/var/jenkins_home `
+  jenkins/jenkins:lts
+
+```
+
 ### Explanation of Command:
 
 - `-d`: Runs the container in detached mode.
