@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: node-k8s-demo
-          image: localhost:5000/node-k8s-demo:latest
+          image: prashant178/k8-image
           ports:
             - containerPort: 3000
 ---
