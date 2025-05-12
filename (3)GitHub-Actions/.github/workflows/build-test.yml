@@ -1,0 +1,28 @@
+name: Build and Test
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build -t flask-user-registration .
+
+      - name: Run container and verify
+        run: |
+          docker run -d -p 5000:5000 --name test-container flask-user-registration
+          sleep 5  # Give the container time to start
+          docker ps | grep test-container
+          docker logs test-container
+          curl -s http://localhost:5000 | grep "Register"
+          docker stop test-container
+          docker rm test-container
