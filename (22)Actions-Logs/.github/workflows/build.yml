@@ -1,0 +1,44 @@
+name: Node.js CI with Build Logs
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create logs directory
+        run: mkdir -p shared_logs
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: |
+          echo "$(date) - Installing dependencies..." >> shared_logs/build.log
+          npm install >> shared_logs/build.log 2>&1
+
+      - name: Run lint
+        run: |
+          echo "$(date) - Running lint..." >> shared_logs/build.log
+          npm run lint >> shared_logs/build.log 2>&1 || true
+
+      - name: Run tests
+        run: |
+          echo "$(date) - Running tests..." >> shared_logs/build.log
+          npm test >> shared_logs/build.log 2>&1
+
+      - name: Upload build log
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-log
+          path: shared_logs/build.log
+
+      - name: Show log contents (debug)
+        run: cat shared_logs/build.log
