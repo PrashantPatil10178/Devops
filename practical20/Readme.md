@@ -1,6 +1,6 @@
 same but for practical 14 ci.yml
 
-'''bash
+```bash
 name: CI Pipeline - Build Report and Logs
 
 on:
@@ -28,11 +28,11 @@ runs-on: ubuntu-latest
             build/build-log.txt
             build/build-report.txt
 
-'''
+```
 
 bash.sh for the practical 14
 
-'''bash
+```bash
 #!/bin/bash
 
 BUILD_START=$(date +%s)
@@ -56,4 +56,4 @@ echo "Status: SUCCESS"
 echo "Date: $(date)"
 echo "Duration: ${BUILD_DURATION}s"
 } > build/build-report.txt
-'''
+```
